@@ -55,7 +55,7 @@ const Home = () => {
                 delay={0.4}
                 stagger={0.15}
               >
-                Hi, I'm <span className="highlight">HASSAN SHAKOOR</span>
+                Hi, I'm <span className="highlight">UBAID UL HASSAN</span>
               </AnimatedText>
               
               <motion.h2 
@@ -113,7 +113,7 @@ const Home = () => {
                 >
                   <img 
                     src={profileImage}
-                    alt="HASSAN SHAKOOR - Frontend Developer" 
+                    alt="UBAID UL HASSAN - Frontend Developer" 
                     className="profile-image"
                     onLoad={handleImageLoad}
                     onError={handleImageError}

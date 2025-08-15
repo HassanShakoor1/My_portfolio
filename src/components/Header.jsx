@@ -83,7 +83,7 @@ const Header = () => {
       </div>
       <div className="drawer-footer">
         <div className="drawer-contact">
-          <p>📧 hassan.shakoor@gmail.com</p>
+                      <p>📧 hassan.shakoor@icloud.com</p>
           <p>📍 Lahore, Pakistan</p>
         </div>
         <div className="drawer-social">

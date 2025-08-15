@@ -654,6 +654,12 @@
     font-size: 2rem;
   }
   
+  .section-title::after {
+    width: 40px;
+    height: 3px;
+    bottom: -8px;
+  }
+  
   .about-info {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -692,12 +698,18 @@
 }
 
 @media (max-width: 480px) {
-  .about {
-    padding: 40px 0;
-  }
-  
   .section-title {
     font-size: 1.8rem;
+  }
+  
+  .section-title::after {
+    width: 35px;
+    height: 2px;
+    bottom: -6px;
+  }
+  
+  .about {
+    padding: 40px 0;
   }
   
   .info-card {

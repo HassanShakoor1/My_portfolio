@@ -108,7 +108,7 @@ const About = () => {
                   transition={{ duration: 0.6, delay: 0.6 }}
                   viewport={{ once: true }}
                 >
-                  Hi! I'm <span className="highlight-text">HASSAN SHAKOOR</span>, a passionate Frontend Developer 
+                  Hi! I'm <span className="highlight-text">UBAID UL HASSAN</span>, a passionate Frontend Developer 
                   and LLM Engineer with 1.5 years of hands-on experience in creating beautiful, responsive, 
                   and user-friendly web applications.
                 </motion.p>

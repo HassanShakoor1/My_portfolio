@@ -6,7 +6,7 @@ const Footer = () => {
   const socialLinks = [
     { name: 'GitHub', icon: '🔗', url: '#', color: '#333' },
     { name: 'LinkedIn', icon: '💼', url: '#', color: '#0077b5' },
-    { name: 'Email', icon: '✉️', url: 'mailto:hassan.shakoor@gmail.com', color: '#ea4335' }
+    { name: 'Email', icon: '✉️', url: 'mailto:hassan.shakoor@icloud.com', color: '#ea4335' }
   ];
 
   const quickLinks = [
@@ -33,8 +33,8 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="footer-brand">
             <div className="brand-logo">
-              <h2>HASSAN SHAKOOR<span className="brand-dot">.</span></h2>
-              <div className="brand-subtitle">Full Stack Developer & AI Engineer</div>
+              <h2>UBAID UL HASSAN<span className="brand-dot">.</span></h2>
+              <div className="brand-subtitle">Frontend Developer & AI Engineer</div>
             </div>
             <p className="brand-description">
               Passionate about creating innovative digital solutions with modern web technologies and AI.
@@ -88,8 +88,8 @@ const Footer = () => {
             <div className="contact-info">
               <div className="contact-item">
                 <span className="contact-icon">📧</span>
-                <a href="mailto:hassan.shakoor@gmail.com" className="contact-link">
-                  hassan.shakoor@gmail.com
+                          <a href="mailto:hassan.shakoor@icloud.com" className="contact-link">
+            hassan.shakoor@icloud.com
                 </a>
               </div>
               <div className="contact-item">
@@ -120,12 +120,12 @@ const Footer = () => {
       <div className="footer-bottom">
         <div className="footer-bottom-content">
           <div className="copyright">
-            <p>&copy; {currentYear} Hassan Shakoor. All rights reserved.</p>
+            <p>&copy; {currentYear} Ubaid ul Hassan. All rights reserved.</p>
           </div>
           <div className="footer-heart">
             <span>Made with</span>
             <span className="heart">❤️</span>
-            <span>in Lahore</span>
+            <span>by Ubaid ul Hassan</span>
           </div>
           <div className="availability">
             <span className="status-indicator"></span>

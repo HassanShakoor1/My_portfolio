@@ -575,6 +575,10 @@
     font-size: 2.5rem;
   }
   
+  .section-divider {
+    display: none;
+  }
+  
   .contact-form {
     padding: 2rem;
   }
@@ -602,12 +606,12 @@
 }
 
 @media (max-width: 480px) {
-  .contact {
-    padding: 40px 0;
-  }
-  
   .section-title {
     font-size: 2rem;
+  }
+  
+  .contact {
+    padding: 40px 0;
   }
   
   .contact-form {

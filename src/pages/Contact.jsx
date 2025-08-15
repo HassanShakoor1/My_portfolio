@@ -228,7 +228,7 @@ const Contact = () => {
               <span className="stat-label">Years Experience</span>
             </div>
             <div className="stat">
-              <span className="stat-number">8+</span>
+              <span className="stat-number">18+</span>
               <span className="stat-label">Projects Completed</span>
             </div>
             <div className="stat">

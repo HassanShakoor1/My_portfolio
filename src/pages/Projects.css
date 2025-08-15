@@ -580,7 +580,9 @@
     font-size: 2.2rem;
   }
   
-
+  .section-divider {
+    display: none;
+  }
   
   .projects-grid {
     grid-template-columns: 1fr;
@@ -613,12 +615,12 @@
 }
 
 @media (max-width: 480px) {
-  .projects {
-    padding: 40px 0;
-  }
-  
   .section-title {
     font-size: 1.8rem;
+  }
+  
+  .projects {
+    padding: 40px 0;
   }
   
   .projects-header {
