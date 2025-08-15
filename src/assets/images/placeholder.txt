@@ -1,0 +1,11 @@
+This is a placeholder file to ensure the assets/images directory exists.
+
+To complete the setup:
+1. Save the Avicenna Enterprise Solutions screenshot as 'avicenna-screenshot.png' in this directory
+2. The image will automatically be used in your Projects component
+
+Recommended image formats:
+- avicenna-screenshot.png (preferred)
+- avicenna-screenshot.jpg (alternative)
+
+The image should be approximately 400x250 pixels for best display.
