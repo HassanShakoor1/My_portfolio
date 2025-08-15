@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Drawer, 
   IconButton, 
@@ -14,8 +14,19 @@ import './Header.css';
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width: 1024px)');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 50;
+      setScrolled(isScrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -31,16 +42,24 @@ const Header = () => {
   };
 
   const navItems = [
-    { text: 'Home', href: '#home' },
-    { text: 'About', href: '#about' },
-    { text: 'Projects', href: '#projects' },
-    { text: 'Contact', href: '#contact' }
+    { text: 'Home', href: '#home', icon: '🏠' },
+    { text: 'About', href: '#about', icon: '👨‍💻' },
+    { text: 'Projects', href: '#projects', icon: '🚀' },
+    { text: 'Contact', href: '#contact', icon: '📧' }
   ];
 
   const drawer = (
     <Box className="drawer-content">
       <div className="drawer-header">
-        <h3 className="drawer-logo">UBAID-UL-HASSAN</h3>
+        <div className="drawer-logo-container">
+          <div className="drawer-logo-icon">
+            <span>&lt;/&gt;</span>
+          </div>
+          <div>
+            <h3 className="drawer-logo">UBAID-UL-HASSAN</h3>
+            <span className="drawer-logo-subtitle"> Frontend Developer</span>
+          </div>
+        </div>
         <IconButton 
           onClick={handleDrawerToggle}
           className="drawer-close-btn"
@@ -49,43 +68,55 @@ const Header = () => {
           <CloseIcon />
         </IconButton>
       </div>
-      <List className="drawer-nav-list">
-        {navItems.map((item) => (
-          <ListItem 
+      <div className="drawer-nav-list">
+        {navItems.map((item, index) => (
+          <div 
             key={item.text} 
             className="drawer-nav-item"
             onClick={() => handleNavClick(item.href)}
           >
-            <ListItemText 
-              primary={item.text} 
-              className="drawer-nav-text"
-            />
-          </ListItem>
+            <span className="drawer-nav-icon">{item.icon}</span>
+            <span className="drawer-nav-text">{item.text}</span>
+            <span className="drawer-nav-arrow">→</span>
+          </div>
         ))}
-      </List>
+      </div>
       <div className="drawer-footer">
-        <p>Frontend Developer</p>
+        <div className="drawer-contact">
+          <p>📧 hassan.shakoor@gmail.com</p>
+          <p>📍 Lahore, Pakistan</p>
+        </div>
         <div className="drawer-social">
-          <span>Let's Connect!</span>
+          <span className="availability-badge">
+            <span className="status-dot"></span>
+            Available for projects
+          </span>
         </div>
       </div>
     </Box>
   );
 
   return (
-    <header className="header">
+    <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="container">
         <div className="logo">
-          <h2>
-            <span className="logo-text">UBAID-UL-HASSAN</span>
-            <span className="logo-dot">.</span>
-          </h2>
+          <div className="logo-container">
+            <div className="logo-icon">
+              <span className="logo-bracket">&lt;</span>
+              <span className="logo-slash">/</span>
+              <span className="logo-bracket">&gt;</span>
+            </div>
+            <div className="logo-text-container">
+              <h2 className="logo-text">UBAID-UL-HASSAN</h2>
+              <span className="logo-subtitle">Frontend Developer</span>
+            </div>
+          </div>
         </div>
         
         {!isMobile && (
           <nav className="nav">
             <ul className="nav-list">
-              {navItems.map((item) => (
+              {navItems.map((item, index) => (
                 <li key={item.text}>
                   <a 
                     href={item.href} 
@@ -95,7 +126,8 @@ const Header = () => {
                       handleNavClick(item.href);
                     }}
                   >
-                    {item.text}
+                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-text">{item.text}</span>
                   </a>
                 </li>
               ))}

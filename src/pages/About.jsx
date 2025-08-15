@@ -1,7 +1,84 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import './About.css';
 
 const About = () => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  });
+
+  const [skillsRef, skillsInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.2
+  });
+
+  const [experienceRef, experienceInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  });
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const slideFromLeft = {
+    hidden: { opacity: 0, x: -100 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const slideFromRight = {
+    hidden: { opacity: 0, x: 100 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const slideFromBottom = {
+    hidden: { opacity: 0, y: 100 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const slideFromTop = {
+    hidden: { opacity: 0, y: -100 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut"
+      }
+    }
+  };
+
   const skills = [
     {
       name: 'HTML5',
@@ -53,25 +130,63 @@ const About = () => {
   ];
 
   return (
-    <section className="about" id="about">
+    <section className="about" id="about" ref={ref}>
       <div className="container">
         {/* Header */}
-        <div className="about-header">
-          <h2 className="section-title">About Me</h2>
-          <div className="section-divider"></div>
-          <p className="section-subtitle">
+        <motion.div 
+          className="about-header"
+          variants={slideFromTop}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+        >
+          <motion.h2 
+            className="section-title"
+            variants={slideFromTop}
+          >
+            About Me
+          </motion.h2>
+          <motion.div 
+            className="section-divider"
+            variants={{
+              hidden: { width: 0 },
+              visible: { 
+                width: "100px",
+                transition: { duration: 0.8, delay: 0.5 }
+              }
+            }}
+          ></motion.div>
+          <motion.p 
+            className="section-subtitle"
+            variants={slideFromTop}
+          >
             Frontend Developer & LLM Engineer with 1.5+ years of experience at leading tech companies
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        <div className="about-content">
+        <motion.div 
+          className="about-content"
+          variants={containerVariants}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+        >
           {/* Personal Info */}
-          <div className="about-info">
-            <div className="info-card">
-              <div className="info-icon">👨‍💻</div>
+          <motion.div className="about-info" variants={containerVariants}>
+            <motion.div 
+              className="info-card"
+              variants={slideFromLeft}
+              whileHover={{ scale: 1.02, y: -5 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div 
+                className="info-icon"
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                👨‍💻
+              </motion.div>
               <h3>Who I Am</h3>
               <p>
-                Hi! I'm <span className="highlight-text">UBAID-UL-HASSAN</span>, a passionate Frontend Developer 
+                Hi! I'm <span className="highlight-text">HASSAN SHAKOOR</span>, a passionate Frontend Developer 
                 and LLM Engineer with 1.5 years of hands-on experience in creating beautiful, responsive, 
                 and user-friendly web applications.
               </p>
@@ -81,10 +196,21 @@ const About = () => {
                 <strong>Avicenna Enterprise Solutions</strong> to my current role, driven by 
                 curiosity and a passion for cutting-edge technology.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="info-card">
-              <div className="info-icon">🎯</div>
+            <motion.div 
+              className="info-card"
+              variants={slideFromRight}
+              whileHover={{ scale: 1.02, y: -5 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div 
+                className="info-icon"
+                animate={{ rotate: [0, -10, 10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+              >
+                🎯
+              </motion.div>
               <h3>What I Do</h3>
               <p>
                 I create modern web applications using <strong>React</strong>, <strong>JavaScript</strong>, 
@@ -92,67 +218,232 @@ const About = () => {
                 and model training. My focus is on writing clean, maintainable code and 
                 delivering exceptional user experiences with custom model integration.
               </p>
-              <div className="specialties">
-                <span className="specialty">Frontend Development</span>
-                <span className="specialty">LLM Engineering</span>
-                <span className="specialty">React Development</span>
-                <span className="specialty">Model Training</span>
-                <span className="specialty">Responsive Design</span>
-              </div>
-            </div>
-          </div>
+              <motion.div 
+                className="specialties"
+                variants={containerVariants}
+              >
+                {['Frontend Development', 'LLM Engineering', 'React Development', 'Model Training', 'Responsive Design'].map((specialty, index) => (
+                  <motion.span 
+                    key={specialty}
+                    className="specialty"
+                    variants={{
+                      hidden: { opacity: 0, scale: 0 },
+                      visible: { 
+                        opacity: 1, 
+                        scale: 1,
+                        transition: {
+                          duration: 0.3,
+                          delay: index * 0.1
+                        }
+                      }
+                    }}
+                    whileHover={{ scale: 1.1 }}
+                  >
+                    {specialty}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </motion.div>
+          </motion.div>
 
           {/* Skills Section */}
-          <div className="skills-section">
-            <h3 className="skills-title">Technical Skills</h3>
-            <div className="skills-grid">
+          <motion.div 
+            className="skills-section"
+            ref={skillsRef}
+            variants={slideFromBottom}
+            initial="hidden"
+            animate={skillsInView ? "visible" : "hidden"}
+          >
+            <motion.h3 
+              className="skills-title"
+              variants={slideFromBottom}
+            >
+              Technical Skills
+            </motion.h3>
+            <motion.div 
+              className="skills-grid"
+              variants={containerVariants}
+              initial="hidden"
+              animate={skillsInView ? "visible" : "hidden"}
+            >
               {skills.map((skill, index) => (
-                <div key={skill.name} className="skill-card" style={{'--delay': `${index * 0.1}s`}}>
+                <motion.div 
+                  key={skill.name} 
+                  className="skill-card" 
+                  style={{'--delay': `${index * 0.1}s`}}
+                  variants={{
+                    hidden: { 
+                      opacity: 0, 
+                      y: 50,
+                      rotateX: -90
+                    },
+                    visible: { 
+                      opacity: 1, 
+                      y: 0,
+                      rotateX: 0,
+                      transition: {
+                        duration: 0.6,
+                        delay: index * 0.1,
+                        ease: "easeOut"
+                      }
+                    }
+                  }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -10,
+                    transition: { duration: 0.3 }
+                  }}
+                >
                   <div className="skill-header">
-                    <span className="skill-icon">{skill.icon}</span>
+                    <motion.span 
+                      className="skill-icon"
+                      animate={{ 
+                        rotate: [0, 360],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: index * 0.2
+                      }}
+                    >
+                      {skill.icon}
+                    </motion.span>
                     <span className="skill-name">{skill.name}</span>
                   </div>
                   <div className="skill-progress">
-                    <div 
+                    <motion.div 
                       className="skill-bar" 
                       style={{
-                        '--width': `${skill.level}%`,
                         '--color': skill.color
                       }}
+                      variants={{
+                        hidden: { '--width': '0%' },
+                        visible: { 
+                          '--width': `${skill.level}%`,
+                          transition: {
+                            duration: 1.5,
+                            delay: index * 0.2 + 0.5,
+                            ease: "easeOut"
+                          }
+                        }
+                      }}
                     >
-                      <span className="skill-percentage">{skill.level}%</span>
-                    </div>
+                      <motion.span 
+                        className="skill-percentage"
+                        initial={{ opacity: 0 }}
+                        animate={skillsInView ? { opacity: 1 } : { opacity: 0 }}
+                        transition={{ delay: index * 0.2 + 1 }}
+                      >
+                        {skill.level}%
+                      </motion.span>
+                    </motion.div>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Experience Timeline */}
-          <div className="experience-section">
-            <h3 className="experience-title">Experience Journey</h3>
-            <div className="timeline">
+          <motion.div 
+            className="experience-section"
+            ref={experienceRef}
+            variants={slideFromTop}
+            initial="hidden"
+            animate={experienceInView ? "visible" : "hidden"}
+          >
+            <motion.h3 
+              className="experience-title"
+              variants={slideFromTop}
+            >
+              Experience Journey
+            </motion.h3>
+            <motion.div 
+              className="timeline"
+              variants={containerVariants}
+              initial="hidden"
+              animate={experienceInView ? "visible" : "hidden"}
+            >
               {experiences.map((exp, index) => (
-                <div key={index} className="timeline-item" style={{'--delay': `${index * 0.2}s`}}>
-                  <div className="timeline-marker"></div>
+                <motion.div 
+                  key={index} 
+                  className="timeline-item" 
+                  style={{'--delay': `${index * 0.2}s`}}
+                  variants={{
+                    hidden: { 
+                      opacity: 0, 
+                      x: index % 2 === 0 ? -100 : 100,
+                      scale: 0.8
+                    },
+                    visible: { 
+                      opacity: 1, 
+                      x: 0,
+                      scale: 1,
+                      transition: {
+                        duration: 0.8,
+                        delay: index * 0.3,
+                        ease: "easeOut"
+                      }
+                    }
+                  }}
+                  whileHover={{ 
+                    scale: 1.02,
+                    y: -5,
+                    transition: { duration: 0.3 }
+                  }}
+                >
+                  <motion.div 
+                    className="timeline-marker"
+                    variants={{
+                      hidden: { scale: 0, rotate: -180 },
+                      visible: { 
+                        scale: 1, 
+                        rotate: 0,
+                        transition: { 
+                          duration: 0.5, 
+                          delay: index * 0.3 + 0.2 
+                        }
+                      }
+                    }}
+                    whileHover={{ scale: 1.2 }}
+                  ></motion.div>
                   <div className="timeline-content">
                     <div className="timeline-period">{exp.period}</div>
                     <h4 className="timeline-title">{exp.title}</h4>
                     <div className="timeline-company">{exp.company}</div>
                     <p className="timeline-description">{exp.description}</p>
-                    <div className="timeline-technologies">
+                    <motion.div 
+                      className="timeline-technologies"
+                      variants={containerVariants}
+                    >
                       {exp.technologies.map((tech, techIndex) => (
-                        <span key={techIndex} className="tech-tag">{tech}</span>
+                        <motion.span 
+                          key={techIndex} 
+                          className="tech-tag"
+                          variants={{
+                            hidden: { opacity: 0, scale: 0 },
+                            visible: { 
+                              opacity: 1, 
+                              scale: 1,
+                              transition: {
+                                duration: 0.3,
+                                delay: techIndex * 0.1
+                              }
+                            }
+                          }}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          {tech}
+                        </motion.span>
                       ))}
-                    </div>
+                    </motion.div>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
-          </div>
-        </div>
-
-
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
