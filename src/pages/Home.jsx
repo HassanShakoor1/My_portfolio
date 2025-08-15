@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import './Home.css';
 import profileImage from '../assets/images/hassan.jpg';
+import AnimatedSection from '../components/AnimatedSection';
+import AnimatedText from '../components/AnimatedText';
 
 const Home = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -41,108 +43,52 @@ const Home = () => {
     if (!imageWrapperRef.current) return;
     imageWrapperRef.current.style.transform = '';
   };
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const textVariants = {
-    hidden: { opacity: 0, x: -100 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const imageVariants = {
-    hidden: { opacity: 0, x: 100, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      scale: 1,
-      transition: {
-        duration: 1,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const buttonVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-        delay: 0.4
-      }
-    }
-  };
-
-  const floatingVariants = {
-    hidden: { opacity: 0, scale: 0 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-        staggerChildren: 0.1
-      }
-    }
-  };
-
   return (
     <main className="home">
       <section className="hero" id="home">
         <div className="container">
-          <motion.div 
-            className="hero-content"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            <motion.div className="hero-text" variants={textVariants}>
-              <motion.h1 
-                className="hero-title"
-                variants={textVariants}
+          <div className="hero-content">
+            <AnimatedSection direction="left" delay={0.2} className="hero-text">
+              <AnimatedText 
+                as="h1" 
+                className="hero-title" 
+                delay={0.4}
+                stagger={0.15}
               >
-                <span className="typewriter">Hi, I'm <span className="highlight">HASSAN SHAKOOR</span></span>
-              </motion.h1>
+                Hi, I'm <span className="highlight">HASSAN SHAKOOR</span>
+              </AnimatedText>
+              
               <motion.h2 
                 className="hero-subtitle"
-                variants={textVariants}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
               >
                 Frontend Developer
               </motion.h2>
+              
               <motion.p 
                 className="hero-description"
-                variants={textVariants}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.0 }}
               >
                 I create beautiful, responsive, and user-friendly web applications 
                 using modern technologies. Passionate about clean code and great user experiences.
               </motion.p>
+              
               <motion.div 
                 className="hero-buttons"
-                variants={buttonVariants}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.2 }}
               >
                 <motion.a 
                   href="#projects" 
                   className="btn btn-primary"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   View My Work
                 </motion.a>
@@ -151,18 +97,19 @@ const Home = () => {
                   className="btn btn-secondary"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   Get In Touch
                 </motion.a>
               </motion.div>
-            </motion.div>
-            <motion.div className="hero-image" variants={imageVariants}>
+            </AnimatedSection>
+            <AnimatedSection direction="right" delay={0.4} className="hero-image">
               <div className="profile-image-container">
                 <motion.div 
                   className="profile-image-wrapper"
                   ref={imageWrapperRef}
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.3 }}
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 >
                   <img 
                     src={profileImage}
@@ -186,44 +133,31 @@ const Home = () => {
                   
                   <div className="image-overlay"></div>
                 </motion.div>
-                <motion.div 
-                  className="floating-elements"
-                  variants={floatingVariants}
-                >
-                  {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                
+                <div className="floating-elements">
+                  {[1, 2, 3, 4, 5, 6, 7].map((num, index) => (
                     <motion.div 
                       key={num}
                       className={`floating-element element-${num}`}
-                      variants={{
-                        hidden: { opacity: 0, scale: 0, rotate: -180 },
-                        visible: { 
-                          opacity: 1, 
-                          scale: 1, 
-                          rotate: 0,
-                          transition: { 
-                            duration: 0.8,
-                            delay: num * 0.1,
-                            ease: "easeOut"
-                          }
-                        }
-                      }}
-                      animate={{
-                        y: [-10, 10, -10],
-                        rotate: [0, 5, -5, 0]
-                      }}
-                      transition={{
-                        duration: 4 + num * 0.5,
-                        repeat: Infinity,
-                        ease: "easeInOut"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ 
+                        duration: 0.5, 
+                        delay: 1.5 + (index * 0.1),
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20
                       }}
                     />
                   ))}
-                </motion.div>
+                </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </AnimatedSection>
+          </div>
         </div>
       </section>
+
+
     </main>
   );
 };

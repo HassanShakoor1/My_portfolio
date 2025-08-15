@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
+import { motion, AnimatePresence } from 'framer-motion';
 import './Projects.css';
+import AnimatedSection from '../components/AnimatedSection';
+import AnimatedText from '../components/AnimatedText';
 import avicennaImage from '../assets/images/cena.png';
 import netagImage from '../assets/images/netaf.png';
 import travelImage from '../assets/images/travel.png';
@@ -9,76 +10,6 @@ import senti from '../assets/images/senti.png';
 
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState('all');
-  
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
-  const [projectsRef, projectsInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1
-      }
-    }
-  };
-
-  const slideFromTop = {
-    hidden: { opacity: 0, y: -100 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const slideFromLeft = {
-    hidden: { opacity: 0, x: -100 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const slideFromRight = {
-    hidden: { opacity: 0, x: 100 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
-    }
-  };
-
-  const slideFromBottom = {
-    hidden: { opacity: 0, y: 100 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
-    }
-  };
 
   const projects = [
     {
@@ -123,272 +54,232 @@ const Projects = () => {
     }
   ];
 
+  const categories = [
+    { id: 'all', label: 'All Projects', icon: '🚀' },
+    { id: 'frontend', label: 'Frontend', icon: '💻' },
+    { id: 'llm', label: 'AI & LLM', icon: '🤖' }
+  ];
+
   const filteredProjects = activeFilter === 'all' 
     ? projects 
     : projects.filter(project => project.category === activeFilter);
 
-  const categories = [
-    { id: 'all', name: 'All Projects', icon: '🌐' },
-    { id: 'frontend', name: 'Frontend', icon: '💻' },
-    { id: 'llm', name: 'LLM & AI', icon: '🤖' }
-  ];
-
   return (
-    <section className="projects" id="projects" ref={ref}>
+    <section className="projects" id="projects">
       <div className="container">
         {/* Header */}
-        <motion.div 
-          className="projects-header"
-          variants={slideFromTop}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-        >
-          <motion.h2 
-            className="section-title"
-            variants={slideFromTop}
-          >
+        <AnimatedSection direction="up" className="projects-header">
+          <AnimatedText as="h2" className="section-title" stagger={0.1}>
             My Projects
-          </motion.h2>
+          </AnimatedText>
           <motion.div 
             className="section-divider"
-            variants={{
-              hidden: { width: 0 },
-              visible: { 
-                width: "100px",
-                transition: { duration: 0.8, delay: 0.5 }
-              }
-            }}
+            initial={{ width: 0 }}
+            whileInView={{ width: '100%' }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
           ></motion.div>
           <motion.p 
             className="section-subtitle"
-            variants={slideFromTop}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            viewport={{ once: true }}
           >
-            A showcase of my work in frontend development and AI integration
+            Showcasing my work in frontend development and LLM engineering
           </motion.p>
-        </motion.div>
+        </AnimatedSection>
 
-        {/* Filter Buttons */}
-        <motion.div 
-          className="project-filters"
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-        >
-          {categories.map((category, index) => (
-            <motion.button
+
+
+        {/* Filter Tabs */}
+        <AnimatedSection direction="up" delay={0.2} className="filter-section">
+          <div className="filter-tabs">
+            {categories.map((category, index) => (
+              <motion.button
                 key={category.id}
-              className={`filter-btn ${activeFilter === category.id ? 'active' : ''}`}
+                className={`filter-tab ${activeFilter === category.id ? 'active' : ''}`}
                 onClick={() => setActiveFilter(category.id)}
-              variants={{
-                hidden: { opacity: 0, y: 50, scale: 0.8 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  scale: 1,
-                  transition: {
-                    duration: 0.5,
-                    delay: index * 0.1,
-                    ease: "easeOut"
-                  }
-                }
-              }}
-              whileHover={{ 
-                scale: 1.05, 
-                y: -2,
-                transition: { duration: 0.2 }
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="filter-icon">{category.icon}</span>
-              <span className="filter-text">{category.name}</span>
-            </motion.button>
-          ))}
-        </motion.div>
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.4 + (index * 0.1) }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <motion.span 
+                  className="tab-icon"
+                  initial={{ rotate: 0 }}
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                >
+                  {category.icon}
+                </motion.span>
+                {category.label}
+              </motion.button>
+            ))}
+          </div>
+        </AnimatedSection>
 
         {/* Projects Grid */}
-        <motion.div 
-          className="projects-grid"
-          ref={projectsRef}
-          variants={containerVariants}
-          initial="hidden"
-          animate={projectsInView ? "visible" : "hidden"}
-        >
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              key={project.id} 
-              className="project-card"
-              layout
-              variants={{
-                hidden: { 
-                  opacity: 0,
-                  y: index % 2 === 0 ? -100 : 100,
-                  x: index % 3 === 0 ? -50 : index % 3 === 1 ? 0 : 50,
-                  scale: 0.8,
-                  rotateY: index % 2 === 0 ? -45 : 45
-                },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  x: 0,
-                  scale: 1,
-                  rotateY: 0,
-                  transition: {
-                    duration: 0.8,
-                    delay: index * 0.2,
-                    ease: "easeOut"
-                  }
-                }
-              }}
-              whileHover={{ 
-                scale: 1.03,
-                y: -10,
-                rotateY: 5,
-                transition: { duration: 0.3 }
-              }}
-              whileTap={{ scale: 0.98 }}
-            >
+        <AnimatePresence mode="wait">
+          <motion.div 
+            className="projects-grid" 
+            data-single={filteredProjects.length === 1}
+            key={activeFilter}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {filteredProjects.map((project, index) => (
               <motion.div 
-                className="project-image"
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.3 }}
+                key={project.id} 
+                className="project-card"
+                initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: 0.6 + (index * 0.1),
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20
+                }}
+                viewport={{ once: true }}
+                whileHover={{ 
+                  y: -10, 
+                  scale: 1.02,
+                  rotateY: 2,
+                  transition: { duration: 0.2 }
+                }}
+                layout
               >
-                <img src={project.image} alt={project.title} />
-                <motion.div 
-                  className="project-overlay"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
+                <div className="project-image">
+                  <motion.img 
+                    src={project.image} 
+                    alt={project.title}
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.3 }}
+                  />
                   <motion.div 
-                    className="project-links"
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileHover="visible"
+                    className="project-overlay"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <motion.a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-link live-link"
-                      variants={{
-                        hidden: { opacity: 0, scale: 0, rotate: -180 },
-                        visible: { 
-                          opacity: 1, 
-                          scale: 1, 
-                          rotate: 0,
-                          transition: { duration: 0.3 }
-                        }
-                      }}
-                      whileHover={{ scale: 1.2, rotate: 10 }}
-                      whileTap={{ scale: 0.9 }}
+                    <motion.div 
+                      className="project-links"
+                      initial={{ y: 20 }}
+                      whileHover={{ y: 0 }}
+                      transition={{ duration: 0.2, delay: 0.1 }}
                     >
-                      🌐
-                    </motion.a>
-                    <motion.a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-link github-link"
-                      variants={{
-                        hidden: { opacity: 0, scale: 0, rotate: 180 },
-                        visible: { 
-                          opacity: 1, 
-                          scale: 1, 
-                          rotate: 0,
-                          transition: { duration: 0.3, delay: 0.1 }
-                        }
-                      }}
-                      whileHover={{ scale: 1.2, rotate: -10 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      📁
-                    </motion.a>
+                      <motion.a 
+                        href={project.liveUrl} 
+                        className="project-link live-link" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.1, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <span className="link-icon">🔗</span>
+                        Live Demo
+                      </motion.a>
+                      {project.githubUrl !== '#' && (
+                        <motion.a 
+                          href={project.githubUrl} 
+                          className="project-link github-link" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          whileHover={{ scale: 1.1, y: -2 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <span className="link-icon">📁</span>
+                          GitHub
+                        </motion.a>
+                      )}
+                    </motion.div>
                   </motion.div>
-                </motion.div>
+                </div>
+                <div className="project-content">
+                  <motion.h4 
+                    className="project-title"
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.8 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                  >
+                    {project.title}
+                  </motion.h4>
+                  <motion.p 
+                    className="project-description"
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.9 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                  >
+                    {project.description}
+                  </motion.p>
+                  <motion.div 
+                    className="project-technologies"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 1.0 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                  >
+                    {project.technologies.map((tech, techIndex) => (
+                      <motion.span 
+                        key={techIndex} 
+                        className="tech-tag"
+                        initial={{ opacity: 0, scale: 0, y: 10 }}
+                        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ 
+                          duration: 0.3, 
+                          delay: 1.1 + (index * 0.1) + (techIndex * 0.05),
+                          type: "spring"
+                        }}
+                        viewport={{ once: true }}
+                        whileHover={{ scale: 1.1, y: -2 }}
+                      >
+                        {tech}
+                      </motion.span>
+                    ))}
+                  </motion.div>
+                </div>
               </motion.div>
-              
-              <motion.div 
-                className="project-content"
-                variants={slideFromBottom}
-              >
-                <motion.h3 
-                  className="project-title"
-                  variants={slideFromLeft}
-                >
-                  {project.title}
-                </motion.h3>
-                <motion.p 
-                  className="project-description"
-                  variants={slideFromRight}
-                >
-                  {project.description}
-                </motion.p>
-                <motion.div 
-                  className="project-technologies"
-                  variants={containerVariants}
-                >
-                  {project.technologies.map((tech, techIndex) => (
-                    <motion.span
-                      key={techIndex}
-                      className="tech-tag"
-                      variants={{
-                        hidden: { opacity: 0, scale: 0, rotate: -90 },
-                        visible: {
-                          opacity: 1,
-                          scale: 1,
-                          rotate: 0,
-                          transition: {
-                            duration: 0.3,
-                            delay: techIndex * 0.1
-                          }
-                        }
-                      }}
-                      whileHover={{ 
-                        scale: 1.1, 
-                        rotate: 5,
-                        transition: { duration: 0.2 }
-                      }}
-                    >
-                      {tech}
-                    </motion.span>
-                  ))}
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          ))}
-        </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
         {/* Call to Action */}
-        <motion.div 
-          className="projects-cta"
-          variants={slideFromBottom}
-          initial="hidden"
-          animate={projectsInView ? "visible" : "hidden"}
-        >
-          <motion.h3 
-            variants={slideFromBottom}
+        <AnimatedSection direction="up" delay={0.8} className="projects-cta">
+          <AnimatedText as="h3" stagger={0.1}>
+            Interested in My Work?
+          </AnimatedText>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.0 }}
+            viewport={{ once: true }}
           >
-            Interested in working together?
-          </motion.h3>
-          <motion.p 
-            variants={slideFromBottom}
-          >
-            I'm always open to discussing new opportunities and exciting projects.
+            Let's discuss how I can help bring your ideas to life
           </motion.p>
-          <motion.a
-            href="#contact"
-            className="cta-button"
-            variants={slideFromBottom}
-            whileHover={{ 
-              scale: 1.05, 
-              y: -3,
-              boxShadow: "0 10px 25px rgba(96, 165, 250, 0.3)"
-            }}
-            whileTap={{ scale: 0.95 }}
+          <motion.div 
+            className="cta-buttons"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.2 }}
+            viewport={{ once: true }}
           >
-            Let's Talk! 💬
-          </motion.a>
-        </motion.div>
+            <motion.a 
+              href="#contact" 
+              className="btn btn-primary"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              Get In Touch
+            </motion.a>
+          </motion.div>
+        </AnimatedSection>
       </div>
     </section>
   );

@@ -669,11 +669,15 @@
   }
   
   .timeline {
-    padding-left: 1.5rem;
+    padding-left: 0;
+  }
+  
+  .timeline::before {
+    display: none;
   }
   
   .timeline-content {
-    margin-left: 1.5rem;
+    margin-left: 0;
     padding: 1.5rem;
   }
   
