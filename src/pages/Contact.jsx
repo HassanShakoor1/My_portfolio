@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import emailjs from '@emailjs/browser';
+import toast from 'react-hot-toast';
 import './Contact.css';
-import AnimatedSection from '../components/AnimatedSection';
-import AnimatedText from '../components/AnimatedText';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +12,13 @@ const Contact = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef();
+
+  // Initialize EmailJS
+  useEffect(() => {
+    emailjs.init('DdDTYbyJPlzJmT2hY');
+    console.log('EmailJS initialized with public key: DdDTYbyJPlzJmT2hY');
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,24 +27,102 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
+    // Show loading toast
+    const loadingToast = toast.loading('📤 Sending your message...');
+    
+    // EmailJS configuration
+    const serviceID = 'service_oxfr5s8';
+    const templateID = 'template_f799yza';
+    const publicKey = 'DdDTYbyJPlzJmT2hY';
+    
+    console.log('Attempting to send email with:', {
+      serviceID,
+      templateID,
+      publicKey,
+      formData
+    });
+
+    try {
+      // Enhanced debugging - let's use the send method with detailed logging
+      const templateParams = {
+        name: formData.name,           // Changed from from_name to name
+        email: formData.email,         // Changed from from_email to email  
+        subject: formData.subject,
+        message: formData.message,
+        to_name: 'Ubaid ul Hassan',
+        to_email: 'hassanshakoor5656@gmail.com', // Explicitly set recipient
+        reply_to: formData.email,
+      };
+
+      console.log('📧 Sending email with template params:', templateParams);
+      console.log('📧 Service details:', { serviceID, templateID, publicKey });
+      
+      const response = await emailjs.send(serviceID, templateID, templateParams, publicKey);
+      
+      console.log('✅ EmailJS Response:', {
+        status: response.status,
+        text: response.text,
+        timestamp: new Date().toISOString()
+      });
+
+      // Check if response indicates success
+      if (response.status === 200) {
+        setIsSubmitting(false);
+        toast.dismiss(loadingToast);
+        toast.success('✅ Message sent successfully!', {
+          duration: 5000,
+        });
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        
+        // Additional success logging
+        console.log('✅ Email should be delivered to: hassanshakoor5656@gmail.com');
+        console.log('✅ Check your EmailJS dashboard at: https://dashboard.emailjs.com/');
+      } else {
+        throw new Error(`Unexpected response status: ${response.status}`);
+      }
+      
+    } catch (error) {
+      console.error('❌ EmailJS Error Details:', {
+        message: error.message,
+        status: error.status,
+        text: error.text,
+        timestamp: new Date().toISOString(),
+        serviceID,
+        templateID,
+        publicKey
+      });
+      
       setIsSubmitting(false);
-      alert('Thank you for your message! I\'ll get back to you soon.');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 2000);
+      toast.dismiss(loadingToast);
+      
+      // More specific error messages
+      let errorMessage = '❌ Failed to send message. ';
+      if (error.status === 400) {
+        errorMessage += 'Check your EmailJS template configuration.';
+      } else if (error.status === 401) {
+        errorMessage += 'Invalid EmailJS credentials.';
+      } else if (error.status === 404) {
+        errorMessage += 'EmailJS service or template not found.';
+      } else {
+        errorMessage += `Error: ${error.text || error.message || 'Unknown error'}`;
+      }
+      
+      toast.error(errorMessage, {
+        duration: 8000,
+      });
+    }
   };
 
   const contactInfo = [
     {
       icon: '📧',
       title: 'Email',
-      value: 'hassan.shakoor@icloud.com',
-      link: ''
+      value: 'hassanshakoor5656@gmail.com',
+      link: 'mailto:hassanshakoor5656@gmail.com'
     },
     {
       icon: '📱',
@@ -66,27 +150,13 @@ const Contact = () => {
     <section className="contact" id="contact">
       <div className="container">
         {/* Header */}
-        <AnimatedSection direction="up" className="contact-header">
-          <AnimatedText as="h2" className="section-title" stagger={0.1}>
-            Get In Touch
-          </AnimatedText>
-          <motion.div 
-            className="section-divider"
-            initial={{ width: 0 }}
-            whileInView={{ width: '100%' }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true }}
-          ></motion.div>
-          <motion.p 
-            className="section-subtitle"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            viewport={{ once: true }}
-          >
+        <div className="contact-header">
+          <h2 className="section-title">Get In Touch</h2>
+          <div className="section-divider"></div>
+          <p className="section-subtitle">
             Ready to start your next project? Let's create something amazing together!
-          </motion.p>
-        </AnimatedSection>
+          </p>
+        </div>
 
         <div className="contact-content">
           {/* Contact Info */}
@@ -143,7 +213,7 @@ const Contact = () => {
               <p>Have a project in mind? Fill out the form below and I'll get back to you as soon as possible.</p>
             </div>
 
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form ref={formRef} className="contact-form" onSubmit={handleSubmit}>
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="name">Full Name</label>
@@ -228,7 +298,7 @@ const Contact = () => {
               <span className="stat-label">Years Experience</span>
             </div>
             <div className="stat">
-              <span className="stat-number">18+</span>
+              <span className="stat-number">8+</span>
               <span className="stat-label">Projects Completed</span>
             </div>
             <div className="stat">
